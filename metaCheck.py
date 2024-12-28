@@ -88,8 +88,13 @@ def upload_file_to_blob(file_data, file_name, user_id):
     except Exception as e:
         print(f"Error uploading file: {e}")
         return False
+def working():
+    return "Working"
 
 # API Endpoint to check if metadata exists and upload if it doesn’t
+@app.route('/', methods=['POST'])
+respone=working()
+return response
 @app.route('/check-metadata', methods=['POST'])
 def check_metadata():
     data = request.get_json()
