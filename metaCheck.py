@@ -93,7 +93,7 @@ def working():
 
 # API Endpoint to check if metadata exists and upload if it doesn’t
 @app.route('/', methods=['POST'])
-respone=working()
+response=working()
 return response
 @app.route('/check-metadata', methods=['POST'])
 def check_metadata():
