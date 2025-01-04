@@ -48,7 +48,7 @@ app = Flask(__name__)
 
 # Azure Storage Configuration
 AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-CONTAINER_NAME = 'documents'
+CONTAINER_NAME = 'weez-app-files'
 
 # Initialize Blob Service Client
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
