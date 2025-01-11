@@ -47,8 +47,8 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Azure Storage Configuration
-AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-CONTAINER_NAME = 'weez-app-files'
+AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
+CONTAINER_NAME = 'weez-user-data'
 
 # Initialize Blob Service Client
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
@@ -73,17 +73,18 @@ def upload_file_to_blob(file_data, file_name, user_id):
         """
     #try:
     blob_client = container_client.get_blob_client(f"{user_id}/{file_name}.json")
-        
-        # Fix padding for base64 data if necessary
-    missing_padding = len(file_data) % 4
+    cleaned_data = file_data.replace(" ", "").replace("\n", "").replace("\r", "")
+
+    # Fix padding for base64 data if necessary
+    missing_padding = len(cleaned_data) % 4 #file_data
     if missing_padding:
-            file_data += '=' * (4 - missing_padding)
+            cleaned_data += '=' * (4 - missing_padding) #file_data
     try:
         # Decode the base64 string
-        file_bytes = BytesIO(base64.b64decode(file_data))
+        file_bytes = BytesIO(base64.b64decode(cleaned_data)) #file_data
     
         # Upload file to Azure Blob Storage
-        blob_client.upload_blob(file_bytes, overwrite=True, content_settings=ContentSettings(content_type="application/octet-stream"))
+        blob_client.upload_blob(file_bytes, overwrite=True,blob_type="BlockBlob", content_settings=ContentSettings(content_type="application/octet-stream"))
         return True
     except Exception as e:
         print(f"Error uploading file: {e}")
