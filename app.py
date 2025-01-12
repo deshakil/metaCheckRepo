@@ -49,14 +49,17 @@ app = Flask(__name__)
 # Azure Storage Configuration
 AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
 CONTAINER_NAME = 'weez-user-data'
+METADATA_CONTAINER_NAME='weez-files-metadata'
 
 # Initialize Blob Service Client
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
 container_client = blob_service_client.get_container_client(CONTAINER_NAME)
+metadata_blob_service_client=BlobServiceClient.from_connection_string(os.getenv('AZURE_METADATA_STORAGE_CONNECTION_STRING'))
+metadata_container_client=metadata_blob_service_client.get_container_client(METADATA_CONTAINER_NAME)
 
 # Function to check if metadata exists in Azure Blob Storage
 def check_metadata_exists(file_name, user_id):
-    blob_client = container_client.get_blob_client(f"{user_id}/{file_name}.json")
+    blob_client = metadata_container_client.get_blob_client(f"{user_id}/{file_name}.json")
     return blob_client.exists()
 
 # Function to upload the file to Blob Storage if metadata does not exist
