@@ -37,7 +37,6 @@ def check_metadata():
 if __name__ == '__main__':
     app.run(port=6000)
 """
-# checkMeta.py
 from flask import Flask, request, jsonify
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import os
@@ -47,12 +46,12 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Azure Storage Configuration
-AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
+AZURE_STORAGE_CONNECTION_STRING_2 = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
 CONTAINER_NAME = 'weez-user-data'
 METADATA_CONTAINER_NAME='weez-files-metadata'
 
 # Initialize Blob Service Client
-blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING_2)
 container_client = blob_service_client.get_container_client(CONTAINER_NAME)
 metadata_blob_service_client=BlobServiceClient.from_connection_string(os.getenv('AZURE_METADATA_STORAGE_CONNECTION_STRING'))
 metadata_container_client=metadata_blob_service_client.get_container_client(METADATA_CONTAINER_NAME)
@@ -75,7 +74,7 @@ def upload_file_to_blob(file_data, file_name, user_id):
         return False
         """
     #try:
-    blob_client = container_client.get_blob_client(f"{user_id}/{file_name}.json")
+    blob_client = container_client.get_blob_client(f"{user_id}/{file_name}")
     cleaned_data = file_data.replace(" ", "").replace("\n", "").replace("\r", "")
 
     # Fix padding for base64 data if necessary
@@ -93,9 +92,7 @@ def upload_file_to_blob(file_data, file_name, user_id):
         print(f"Error uploading file: {e}")
         return False
 
-
 # API Endpoint to check if metadata exists and upload if it doesn’t
-
 @app.route('/check-metadata', methods=['POST'])
 def check_metadata():
     data = request.get_json()
@@ -125,5 +122,4 @@ def check_metadata():
         return jsonify({'error': 'Unable to check metadata existence or upload file.'}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(port=8000)
