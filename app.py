@@ -39,6 +39,9 @@ def upload_file_to_blob(file_data, file_name, user_id):
     cleaned_data = file_data.replace(" ", "").replace("\n", "").replace("\r", "")
 
     # Fix padding for base64 data if necessary
+        # Remove Base64 prefix if present
+        if cleaned_data.startswith("data:"):
+            cleaned_data = cleaned_data.split(",", 1)[1]
     missing_padding = len(cleaned_data) % 4 #file_data
     if missing_padding:
             cleaned_data += '=' * (4 - missing_padding) #file_data
