@@ -8,7 +8,6 @@ from io import BytesIO
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
 # Azure Storage Configuration
-AZURE_STORAGE_CONNECTION_STRING_2 = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
 CONTAINER_NAME = 'weez-user-data'
 METADATA_CONTAINER_NAME='weez-files-metadata'
 
