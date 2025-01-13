@@ -1,42 +1,4 @@
-"""""
-from flask import Flask, request, jsonify
-from azure.storage.blob import BlobServiceClient
-import os
 
-app = Flask(__name__)
-
-# Azure Storage Configuration
-AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-CONTAINER_NAME = 'weezappstorage'  # Replace with your container name
-
-# Function to check if the metadata file exists in Azure Blob Storage
-def check_metadata_exists(file_name):
-    blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
-    container_client = blob_service_client.get_container_client(CONTAINER_NAME)
-
-    # Check if the blob exists in the container
-    blob_client = container_client.get_blob_client(file_name)
-    return blob_client.exists()  # Returns True if the blob exists, False otherwise
-
-# API Endpoint to check if metadata exists
-@app.route('/check-metadata', methods=['POST'])
-def check_metadata():
-    data = request.get_json()
-    file_name = data.get('fileName')
-
-    if not file_name:
-        return jsonify({'error': 'fileName is required'}), 400
-
-    try:
-        exists = check_metadata_exists(file_name)
-        return jsonify({'exists': exists}), 200
-    except Exception as e:
-        print('Error checking metadata existence:', e)
-        return jsonify({'error': 'Unable to check metadata existence.'}), 500
-
-if __name__ == '__main__':
-    app.run(port=6000)
-"""
 from flask import Flask, request, jsonify
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import os
@@ -44,7 +6,7 @@ import base64
 from io import BytesIO
 
 app = Flask(__name__)
-
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
 # Azure Storage Configuration
 AZURE_STORAGE_CONNECTION_STRING_2 = os.getenv('AZURE_STORAGE_CONNECTION_STRING_1')
 CONTAINER_NAME = 'weez-user-data'
