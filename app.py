@@ -11,7 +11,7 @@ CONTAINER_NAME = 'weez-user-data'
 METADATA_CONTAINER_NAME = 'weez-files-metadata'
 
 # Initialize Blob Service Client
-blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING_2)
+blob_service_client = BlobServiceClient.from_connection_string(os.getenv('AZURE_STORAGE_CONNECTION_STRING_1'))
 container_client = blob_service_client.get_container_client(CONTAINER_NAME)
 metadata_blob_service_client = BlobServiceClient.from_connection_string(os.getenv('AZURE_METADATA_STORAGE_CONNECTION_STRING'))
 metadata_container_client = metadata_blob_service_client.get_container_client(METADATA_CONTAINER_NAME)
